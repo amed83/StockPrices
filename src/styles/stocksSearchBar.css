@@ -1,0 +1,18 @@
+
+.matchesList li{
+    list-style-type: none;
+    padding:8px;
+    cursor: pointer;
+}
+.matchesList li:hover{
+    background-color: rgba(225, 215, 231, 0.92);
+}
+.matchesList{
+
+    text-align: left;
+}
+.resultsContainer{
+    display: flex;
+    display: flex;
+    justify-content: center;
+}
