@@ -1,14 +1,14 @@
 
 import React,{Component} from 'react'
-
 import axios from 'axios'
-import { connect } from 'react-redux';
 
+import Input from '@material-ui/core/Input';
 import '../styles/stocksSearchBar.css'
 import {selectStock} from '../actions/index'
 import StockDetails from './StockDetails'
-const apikey = 'EFJP0CTPI85RATLO'
+import { connect } from 'react-redux';
 
+const apikey = 'EFJP0CTPI85RATLO'
 
 
 class StocksSearchBar extends Component {
@@ -29,9 +29,10 @@ class StocksSearchBar extends Component {
     }
     
     incrementalSearch= async()=>{
+    
         const input = this.state.input
         const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${input}&apikey=${apikey}`
-         await axios.get(url)
+        await axios.get(url)
             .then(stocks=>{
                 const results = stocks.data.bestMatches
                 let listOfMatches=[]
@@ -40,7 +41,7 @@ class StocksSearchBar extends Component {
                         const stockObj = {name:stock['2. name'],symbol:stock['1. symbol']}
                         listOfMatches.push(stockObj)
                     })    
-                }
+                }    
                 this.setState((state)=>{
                     return{...state,results:listOfMatches}
                 })
@@ -50,20 +51,20 @@ class StocksSearchBar extends Component {
         if(index){
             this.props.selectStock(this.state.results[index])
             this.setState({
-                showDetails:true
+                showDetails:true,
+                input:this.state.results[index].name
             })
         }        
     }
-    
     render(){
         return(
             <div >
                 <form>
-                    <input value={this.state.input}
+                    <Input value={this.state.input}
                         onChange={this.handleSearch}/>
                 </form>
                 <div className="resultsContainer">
-                    { this.state.results && !this.state.showDetails &&
+                    { this.state.results  &&
                         <ul className="matchesList">
                             {this.state.results.map((item,index)=>{
                                 return(
@@ -73,7 +74,6 @@ class StocksSearchBar extends Component {
                                 )                         
                             })}
                         </ul>
-                        
                     }
                     {
                         this.state.results.length<1 &&
@@ -81,11 +81,7 @@ class StocksSearchBar extends Component {
                             "Sorry, no matches for this name"
                         </h4>
                     }
-                    {
-                        this.props.stockState.stock_name &&
-                        <StockDetails stockDetail={this.props.stockState}/>
-                    }
-                    
+                        
                 </div>
             </div>
         )
@@ -96,14 +92,11 @@ const messageStyle={
     color:'rgb(98, 101, 99)'
 }
 
-const  mapStateToProps=state=>{
+const mapStateToProps=state=>{
     return {
         stockState:state.selectStock
     }
 }
 
-
-
-
-
 export default connect(mapStateToProps,{selectStock})(StocksSearchBar)
+
